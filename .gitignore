@@ -17,6 +17,10 @@ out
 
 # production
 build
+dist
+
+# turborepo
+.turbo
 
 # env files
 .env*
