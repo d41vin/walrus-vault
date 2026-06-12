@@ -1,0 +1,22 @@
+{
+  "name": "@walrus-vault/mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "walrus-vault-mcp": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --no-splitting",
+    "dev": "tsup src/index.ts --format cjs --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "@walrus-vault/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "tsup": "latest",
+    "typescript": "^5.0.0"
+  }
+}
