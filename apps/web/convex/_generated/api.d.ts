@@ -8,13 +8,19 @@
  * @module
  */
 
+import type * as activityFeed from "../activityFeed.js";
+import type * as artifacts from "../artifacts.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  activityFeed: typeof activityFeed;
+  artifacts: typeof artifacts;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
