@@ -12,10 +12,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@walrus-vault/sdk": "workspace:*",
-    "@mysten-incubation/memwal": "latest",
     "@base-ui/react": "^1.5.0",
+    "@mysten-incubation/memwal": "latest",
     "@tabler/icons-react": "^3.44.0",
+    "@walrus-vault/sdk": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -23,6 +23,7 @@
     "date-fns": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
+    "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
