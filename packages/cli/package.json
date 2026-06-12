@@ -1,0 +1,24 @@
+{
+  "name": "walrus-vault",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "walrus-vault": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --no-splitting",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@walrus-vault/sdk": "workspace:*",
+    "chalk": "latest",
+    "commander": "latest",
+    "ora": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "tsup": "latest",
+    "typescript": "^5.0.0"
+  }
+}
