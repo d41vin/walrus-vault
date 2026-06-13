@@ -71,6 +71,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "number",
               description: "Optional number of Walrus epochs to store this file (default: 10).",
             },
+            sessionId: {
+              type: "string",
+              description: "Optional identifier of the session/run storing this file.",
+            },
             derivedFrom: {
               type: "string",
               description: "Optional artifact ID that this file was derived/generated from.",
@@ -191,6 +195,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           description,
           tags,
           agentId,
+          sessionId,
+          epochs,
           derivedFrom,
           dependsOn,
         } = args as any;
@@ -202,6 +208,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           description,
           tags,
           agentId,
+          sessionId,
+          epochs,
           derivedFrom,
           dependsOn,
         });
