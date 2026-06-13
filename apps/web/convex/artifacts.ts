@@ -110,13 +110,13 @@ export const listCachedArtifacts = query({
         .withIndex("by_account_content_type", (q) =>
           q.eq("accountId", args.accountId).eq("contentType", args.contentType!)
         )
-        .collect();
+        .take(200);
     }
 
     return await ctx.db
       .query("artifactCache")
       .withIndex("by_account", (q) => q.eq("accountId", args.accountId))
-      .collect();
+      .take(200);
   },
 });
 

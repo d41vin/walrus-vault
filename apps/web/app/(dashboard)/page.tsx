@@ -141,7 +141,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="divide-y divide-border">
-                {artifacts.slice(-5).reverse().map((artifact) => (
+                {[...artifacts].sort((a, b) => b.cachedAt - a.cachedAt).slice(0, 5).map((artifact) => (
                   <div key={artifact.artifactId} className="flex items-center justify-between py-3.5 group">
                     <div className="flex items-center gap-3.5 min-w-0">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/5 border border-primary/10 text-primary">

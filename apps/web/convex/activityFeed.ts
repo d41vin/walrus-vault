@@ -35,8 +35,8 @@ export const list = query({
     const limit = args.limit ?? 20;
     return await ctx.db
       .query("activityFeed")
-      .withIndex("by_account", (q) => q.eq("accountId", args.accountId))
-      .order("desc") // Order by timestamp desc if index by_account handles sorting or we filter and sort
+      .withIndex("by_account_time", (q) => q.eq("accountId", args.accountId))
+      .order("desc")
       .take(limit);
   },
 });
