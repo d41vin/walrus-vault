@@ -107,7 +107,6 @@ describe("ArtifactVault", () => {
       expect(result.metaMemoryId).toBe("memory-blob-id");
       expect(result.version).toBe(1);
 
-      // Verify inspector sync was fired (fire-and-forget)
       expect(inspectorFetchSpy).toHaveBeenCalledWith(
         "https://inspector.example.com/api/sync-artifact",
         expect.objectContaining({
@@ -115,6 +114,30 @@ describe("ArtifactVault", () => {
           body: expect.stringContaining("hello.txt"),
         })
       );
+    });
+
+    it("should override epochs when meta.epochs is provided", async () => {
+      mockStore.mockResolvedValue({
+        blobId: "my-uploaded-blob-id-epochs",
+        size: 555,
+        alreadyExists: false,
+      });
+
+      mockRemember.mockResolvedValue({ job_id: "job-epochs" });
+      mockWaitForRememberJob.mockResolvedValue({ blob_id: "memory-blob-id-epochs" });
+
+      const vault = ArtifactVault.create({ ...config, walrusEpochs: 15 });
+      const fileBytes = new Uint8Array([9, 9, 9]);
+      const meta = {
+        filename: "epochs-test.txt",
+        contentType: "text/plain",
+        epochs: 5,
+      };
+
+      const result = await vault.store(fileBytes, meta);
+
+      expect(mockStore).toHaveBeenCalledWith(fileBytes, "text/plain", 5);
+      expect(result.blobId).toBe("my-uploaded-blob-id-epochs");
     });
 
     it("should throw WalrusVaultPartialError if MemWal remember fails", async () => {

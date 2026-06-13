@@ -100,6 +100,7 @@ export interface StoreOptions {
   sessionId?: string;
   derivedFrom?: string;           // artifactId this was derived/generated from
   dependsOn?: string[];           // artifactIds this artifact depends on
+  epochs?: number;                // Optional override for Walrus storage epochs (default: config.walrusEpochs)
 }
 
 /**

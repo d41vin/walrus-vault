@@ -94,4 +94,37 @@ describe("Metadata Serializer & Parser", () => {
       { version: 2, blobId: "some-walrus-blob-id", createdAt: "" },
     ]);
   });
+
+  it("should sanitize user-supplied fields with newlines and carriage returns to prevent injection", () => {
+    const artifact: StoredArtifact = {
+      id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      filename: "test\nfilename.pdf",
+      contentType: "application/pdf",
+      blobId: "some-walrus-blob-id",
+      size: 1024,
+      version: 1,
+      latestVersion: 1,
+      versions: [{ version: 1, blobId: "some-walrus-blob-id", createdAt: "" }],
+      description: "A cool description\nwith newlines\rand carriage returns",
+      tags: ["walrus\nclean", "report"],
+      agentId: "agent-alpha\ninjection",
+      sessionId: "session-xyz\ninjection",
+      derivedFrom: "parent-id\ninjection",
+      dependsOn: ["dep-1\ninjection"],
+      downloadUrl: "https://aggregator.walrus.wal.app/v1/blobs/some-walrus-blob-id",
+      createdAt: "2026-06-09T12:00:00Z",
+    };
+
+    const serialized = serializeMetadata(artifact);
+
+    const parsed = parseMetadata(serialized);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.filename).toBe("test filename.pdf");
+    expect(parsed!.description).toBe("A cool description with newlines and carriage returns");
+    expect(parsed!.tags).toEqual(["walrus clean", "report"]);
+    expect(parsed!.agentId).toBe("agent-alpha injection");
+    expect(parsed!.sessionId).toBe("session-xyz injection");
+    expect(parsed!.derivedFrom).toBe("parent-id injection");
+    expect(parsed!.dependsOn).toEqual(["dep-1 injection"]);
+  });
 });

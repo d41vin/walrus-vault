@@ -25,26 +25,53 @@ export function generateArtifactId(): string {
 }
 
 /**
+ * Sanitize a metadata field value to prevent newline injection.
+ * Replaces newlines and carriage returns with a space and trims leading/trailing space.
+ */
+export function sanitizeField(value: string): string {
+  return value
+    .replace(/\r?\n/g, " ")
+    .replace(/\r/g, " ")
+    .trim();
+}
+
+/**
  * Serialize a StoredArtifact into the ARTIFACT_VAULT_META text format.
  * This text is what gets embedded and semantically indexed by MemWal.
  */
 export function serializeMetadata(artifact: StoredArtifact): string {
+  const sanitizedFilename = sanitizeField(artifact.filename);
+  const sanitizedDescription = artifact.description ? sanitizeField(artifact.description) : "";
+  const sanitizedAgentId = artifact.agentId ? sanitizeField(artifact.agentId) : "manual";
+  const sanitizedSessionId = artifact.sessionId ? sanitizeField(artifact.sessionId) : "none";
+  const sanitizedDerivedFrom = artifact.derivedFrom ? sanitizeField(artifact.derivedFrom) : "none";
+  
+  const sanitizedTags = artifact.tags
+    .map((t) => sanitizeField(t))
+    .filter(Boolean)
+    .join(", ");
+
+  const sanitizedDependsOn =
+    artifact.dependsOn && artifact.dependsOn.length > 0
+      ? artifact.dependsOn.map((d) => sanitizeField(d)).filter(Boolean).join(", ")
+      : "none";
+
   const lines = [
     META_PREFIX,
     `id: ${artifact.id}`,
-    `filename: ${artifact.filename}`,
+    `filename: ${sanitizedFilename}`,
     `contentType: ${artifact.contentType}`,
     `blobId: ${artifact.blobId}`,
     `size: ${artifact.size}`,
     `version: ${artifact.version}`,
     `latestVersion: ${artifact.latestVersion}`,
     `versions: ${serializeVersionsField(artifact.versions)}`,
-    `description: ${artifact.description ?? ""}`,
-    `tags: ${artifact.tags.length > 0 ? artifact.tags.join(", ") : ""}`,
-    `agentId: ${artifact.agentId ?? "manual"}`,
-    `sessionId: ${artifact.sessionId ?? "none"}`,
-    `derivedFrom: ${artifact.derivedFrom ?? "none"}`,
-    `dependsOn: ${artifact.dependsOn && artifact.dependsOn.length > 0 ? artifact.dependsOn.join(", ") : "none"}`,
+    `description: ${sanitizedDescription}`,
+    `tags: ${sanitizedTags}`,
+    `agentId: ${sanitizedAgentId}`,
+    `sessionId: ${sanitizedSessionId}`,
+    `derivedFrom: ${sanitizedDerivedFrom}`,
+    `dependsOn: ${sanitizedDependsOn}`,
     `createdAt: ${artifact.createdAt}`,
   ];
 

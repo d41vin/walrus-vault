@@ -34,7 +34,6 @@ import { groupByLatestVersion } from "./dedup.js";
 import {
   InvalidConfigError,
   ArtifactNotFoundError,
-  MetadataStoreError,
   WalrusVaultPartialError,
 } from "./errors.js";
 
@@ -121,7 +120,7 @@ export class ArtifactVault {
     const walrusResult = await this.walrus.store(
       bytes,
       meta.contentType,
-      this.config.walrusEpochs!,
+      meta.epochs ?? this.config.walrusEpochs!,
     );
 
     // 2. Build the StoredArtifact
@@ -384,8 +383,10 @@ export class ArtifactVault {
       description: meta?.description,
     };
 
+    const { walrusBlobInfo, ...cleanCurrent } = current;
+
     const artifact: StoredArtifact = {
-      ...current,
+      ...cleanCurrent,
       blobId: walrusResult.blobId,
       version: newVersion,
       latestVersion: newVersion,
